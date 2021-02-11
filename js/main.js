@@ -6,7 +6,7 @@ const prevBtn = document.getElementById('prev_page');
 const results = document.getElementById('num-results');
 const selectedSort = document.getElementById('selected-sort');
 
-const url = "https://free-to-play-games-database.p.rapidapi.com/api/games";
+const url = "https://free-to-play-games-database.p.rapidapi.com/api/";
 const headers = { 
 	"method": "GET",
 	"headers": {
@@ -16,7 +16,61 @@ const headers = {
 
 let gameList = {};
 let currentPage = 1;
-let itemsPerPage = 5;
+let itemsPerPage = 20;
+let tagList = ["mmorpg", "shooter", "strategy", "moba", "racing", "sports", "social", "sandbox", "open-world",
+ "survival", "pvp", "pve", "pixel", "voxel", "zombie", "turn-based", "first-person", "third-Person", "top-down", "tank", "space", 
+"sailing", "side-scroller", "superhero", "permadeath", "card", "battle-royale", "mmo", "mmofps", "mmotps", "3d", "2d", "anime", "fantasy", "sci-fi", "fighting",
+ "action-rpg", "action", "military", "martial-arts", "flight", "low-spec", "tower-defense", "horror", "mmorts"];
+
+//creates tag list 
+function createTagList(){	
+	let distinct = [];	
+	let unique = [];
+
+	for(i in tagList){			
+		if( !unique[tagList[i]]){
+			distinct.push(tagList[i]);
+			unique[tagList[i]] = 1;						
+			filters.innerHTML += `
+				<div class="checkbox">
+            		<label><input name="tags" type="checkbox" class="icheck" value="` + tagList[i] + `"> ` + tagList[i] + `</label>
+            	</div>`	
+		}
+	};
+}
+
+function checkTags(){
+	let checkboxes = document.querySelectorAll('input[name="tags"]:checked'), values = [];
+	Array.prototype.forEach.call(checkboxes, function(el){
+		values.push(el.value);
+	});
+	return values;
+}
+
+function applyFilter(){	
+	let page = 1;
+	let filterQuery = "filter?tag=";
+
+	if(checkTags().length != 0) {
+		for(i = 0; i < checkTags().length; i++){
+		
+			if(i < 1){
+				filterQuery += checkTags()[i];
+			} else {
+				filterQuery += "." + checkTags()[i];
+			}		
+			console.log(filterQuery)		
+		}	
+	} else {
+		filterQuery = "games"
+	}
+		
+	fetchData(url + filterQuery)	
+		.then(data => {
+			gameList = data;	
+			createGameList(page);			
+	});			
+}	
 
 //pagination
 function prevPage(){
@@ -89,29 +143,22 @@ function createFilterList(){
 			unique[gameList[i].genre] = 1;						
 			filters.innerHTML += `
 				<div class="checkbox">
-            		<label><input type="checkbox" class="icheck" id="` + gameList[i].genre + `"> ` + gameList[i].genre + `</label>
+            		<label><input type="checkbox" class="icheck" value="` + gameList[i].genre + `"> ` + gameList[i].genre + `</label>
             	</div>`	
 		}
 	};
 }
 
-function applyFilter(){	
-	let page = 1;
-	
-	fetchData(url)	
-		.then(data => {
-			gameList = data;	
-			createGameList(page);			
-	});			
-}	
+
 
 function onLoad(){
 	let page = 1;
 	
-	fetchData(url)	
+	fetchData(url + "games")	
 		.then(data => {
 			gameList = data;	
-			createFilterList();		
+			//createFilterList();		
+			createTagList();
 			createGameList(page);			
 	});			
 }
@@ -133,7 +180,7 @@ function sort(sort){
 			selectedSort.innerHTML = "Order By";
 	}	
 
-	fetchData(url + "?sort-by=" + sort + "")	
+	fetchData(url + "games?sort-by=" + sort + "")	
 		.then(data => {
 			gameList = data;			
 			createGameList(page);			
