@@ -35,27 +35,46 @@
               <hr>
               
               <!-- BEGIN FILTER BY CATEGORY -->
-              <h4>By category:</h4>
+              <h4>By genre:</h4>
+              <div id="filter-list">
+                <!--
               <div class="checkbox">
-                <label><input type="checkbox" class="icheck"> Application</label>
+                <label><input type="checkbox" class="icheck"> MMORPG</label>
               </div>
               <div class="checkbox">
-                <label><input type="checkbox" class="icheck"> Design</label>
+                <label><input type="checkbox" class="icheck"> Shooter</label>
               </div>
               <div class="checkbox">
-                <label><input type="checkbox" class="icheck"> Desktop</label>
+                <label><input type="checkbox" class="icheck"> Strategy</label>
               </div>
               <div class="checkbox">
-                <label><input type="checkbox" class="icheck"> Management</label>
+                <label><input type="checkbox" class="icheck"> MOBA</label>
               </div>
               <div class="checkbox">
-                <label><input type="checkbox" class="icheck"> Mobile</label>
+                <label><input type="checkbox" class="icheck"> Racing</label>
               </div>
+              <div class="checkbox">
+                <label><input type="checkbox" class="icheck"> Sports</label>
+              </div>
+              <div class="checkbox">
+                <label><input type="checkbox" class="icheck"> Tower Defense</label>
+              </div>
+              <div class="checkbox">
+                <label><input type="checkbox" class="icheck"> Survival</label>
+              </div>
+              <div class="checkbox">
+                <label><input type="checkbox" class="icheck"> Card Game</label>
+              </div>
+              <div class="checkbox">
+                <label><input type="checkbox" class="icheck"> Fighting</label>
+              </div>
+              -->
+            </div>
               <!-- END FILTER BY CATEGORY -->
               
               <div class="padding"></div>
               
-              <!-- BEGIN FILTER BY DATE -->
+              <!-- BEGIN FILTER BY DATE
               <h4>By date:</h4>
               From
               <div class="input-group date form_date" data-date="2014-06-14T05:25:07Z" data-date-format="dd-mm-yyyy" data-link-field="dtp_input1">
@@ -70,33 +89,43 @@
                 <span class="input-group-addon bg-blue"><i class="fa fa-th"></i></span>
               </div>
               <input type="hidden" id="dtp_input2" value="">
-              <!-- END FILTER BY DATE -->
+              END FILTER BY DATE -->
               
               <div class="padding"></div>
               
-              <!-- BEGIN FILTER BY PRICE -->
+              <!-- BEGIN FILTER BY PRICE
               <h4>By price:</h4>
               Between <div id="price1">$300</div> to <div id="price2">$800</div>
               <div class="slider-primary">
                 <div class="slider slider-horizontal" style="width: 152px;"><div class="slider-track"><div class="slider-selection" style="left: 30%; width: 50%;"></div><div class="slider-handle round" style="left: 30%;"></div><div class="slider-handle round" style="left: 80%;"></div></div><div class="tooltip top hide" style="top: -30px; left: 50.1px;"><div class="tooltip-arrow"></div><div class="tooltip-inner">300 : 800</div></div><input type="text" class="slider" value="" data-slider-min="0" data-slider-max="1000" data-slider-step="1" data-slider-value="[300,800]" data-slider-tooltip="hide"></div>
               </div>
-              <!-- END FILTER BY PRICE -->
-            </div>
+              END FILTER BY PRICE -->
+              
+              <div class="input-group">
+                <!--<input id="search-input" type="text" class="form-control" value="">-->
+                <span class="input-group-btn">
+                  <button class="btn btn-primary" type="button" id="apply-btn"><i class="fa fa-search">Apply</i></button>
+                </span>
+              </div>
+
+            </div>            
             <!-- END FILTERS -->
             <!-- BEGIN RESULT -->
             <div class="col-md-9">
-              <h2><i class="fa fa-file-o"></i> Result</h2>
+              <h2><i class="fa fa-file-o"></i>F2P Games</h2>
               <hr>
-              <!-- BEGIN SEARCH INPUT -->
+
+              <!-- BEGIN SEARCH INPUT
               <div class="input-group">
-                <input type="text" class="form-control" value="web development">
+                <input id="search-input" type="text" class="form-control" value="">
                 <span class="input-group-btn">
-                  <button class="btn btn-primary" type="button"><i class="fa fa-search"></i></button>
+                  <button class="btn btn-primary" type="button" id="search-btn"><i class="fa fa-search">Search</i></button>
                 </span>
               </div>
-              <!-- END SEARCH INPUT -->
+              END SEARCH INPUT 
+
               <p>Showing all results matching "web development"</p>
-              
+              -->
               <div class="padding"></div>
               
               <div class="row">
@@ -118,8 +147,8 @@
                 
                 <div class="col-md-6 text-right">
                   <div class="btn-group">
-                    <button type="button" class="btn btn-default active"><i class="fa fa-list"></i></button>
-                    <button type="button" class="btn btn-default"><i class="fa fa-th"></i></button>
+                    <!--<button type="button" class="btn btn-default active"><i class="fa fa-list"></i></button>
+                    <button type="button" class="btn btn-default"><i class="fa fa-th"></i></button>-->
                   </div>
                 </div>
               </div>
@@ -127,7 +156,9 @@
               <!-- BEGIN TABLE RESULT -->
               <div class="table-responsive">
                 <table class="table table-hover">
-                  <tbody><tr>
+                  <tbody id="table-body">
+                  <!--
+                  <tr>
                     <td class="number text-center">1</td>
                     <td class="image"><img src="https://via.placeholder.com/400x300/FF8C00" alt=""></td>
                     <td class="product"><strong>Product 1</strong><br>This is the product description.</td>
@@ -183,6 +214,7 @@
                     <td class="rate text-right"><span><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></span></td>
                     <td class="price text-right">$1,550</td>
                   </tr>
+                  -->
                 </tbody></table>
               </div>
               <!-- END TABLE RESULT -->
