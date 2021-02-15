@@ -17,6 +17,11 @@ const headers = {
 let gameList = {};
 let currentPage = 1;
 let itemsPerPage = 20;
+let filterQuery = "games";
+
+let isSort = false;
+let isFilter = false;
+
 let tagList = ["mmorpg", "shooter", "strategy", "moba", "racing", "sports", "social", "sandbox", "open-world",
  "survival", "pvp", "pve", "pixel", "voxel", "zombie", "turn-based", "first-person", "third-Person", "top-down", "tank", "space", 
 "sailing", "side-scroller", "superhero", "permadeath", "card", "battle-royale", "mmo", "mmofps", "mmotps", "3d", "2d", "anime", "fantasy", "sci-fi", "fighting",
@@ -47,30 +52,65 @@ function checkTags(){
 	return values;
 }
 
-function applyFilter(){	
-	let page = 1;
-	let filterQuery = "filter?tag=";
+//fetch
+function fetchData(url) {
+	return fetch(url, headers)
+			.then(response => response.json())
+			.catch(err => console.error(err));	
+}
 
-	if(checkTags().length != 0) {
-		for(i = 0; i < checkTags().length; i++){
-		
-			if(i < 1){
-				filterQuery += checkTags()[i];
-			} else {
-				filterQuery += "." + checkTags()[i];
-			}		
-			console.log(filterQuery)		
-		}	
+//generates game list
+function createGameList(page){
+	tbody.innerHTML = "";
+	
+	results.innerHTML = gameList.length + " free game(s)"
+	
+	for(i = (page-1) * itemsPerPage; i < (page * itemsPerPage) && i < gameList.length; i++){
+		let num = i+1;	
+
+		tbody.innerHTML += `			
+			<tr id="myBtn">
+				<td class="number text-center">` + num + `</td>
+				<td class="image"><img src="` + gameList[i].thumbnail + `" alt=""></td>
+				<td class="product"><strong>` + gameList[i].title + `</strong><br>` + gameList[i].short_description + `</td>
+				<td class="rate text-right"><span><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></span></td>
+				<td class="price text-right">` + gameList[i].genre + `</td>				
+			</tr>
+			`
+	};
+
+	//changes pagination styles
+	if(page == 1){
+		prevBtn.className = 'disabled';
 	} else {
-		filterQuery = "games"
+		prevBtn.className = 'active';
 	}
-		
-	fetchData(url + filterQuery)	
-		.then(data => {
-			gameList = data;	
-			createGameList(page);			
-	});			
-}	
+
+	if(page == numPages()){
+		nextBtn.className = 'disabled';
+	} else {
+		nextBtn.className = 'active';
+	}
+}
+
+//creates filter list 
+/*
+function createFilterList(){	
+	let distinct = [];	
+	let unique = [];
+
+	for(i in gameList){			
+		if( !unique[gameList[i].genre]){
+			distinct.push(gameList[i].genre);
+			unique[gameList[i].genre] = 1;						
+			filters.innerHTML += `
+				<div class="checkbox">
+            		<label><input type="checkbox" class="icheck" value="` + gameList[i].genre + `"> ` + gameList[i].genre + `</label>
+            	</div>`	
+		}
+	};
+}
+*/
 
 //pagination
 function prevPage(){
@@ -91,66 +131,6 @@ function numPages(){
 	return Math.ceil(gameList.length / itemsPerPage);
 }
 
-//fetch
-function fetchData(url) {
-	return fetch(url, headers)
-			.then(response => response.json())
-			.catch(err => console.error(err));	
-}
-
-//generates game list
-function createGameList(page){
-	tbody.innerHTML = "";
-	
-	results.innerHTML = gameList.length + " free game(s)"
-	
-	for(i = (page-1) * itemsPerPage; i < (page * itemsPerPage) && i < gameList.length; i++){
-		let num = i+1;	
-
-		tbody.innerHTML += `			
-			<tr>
-				<td class="number text-center">` + num + `</td>
-				<td class="image"><img src="` + gameList[i].thumbnail + `" alt=""></td>
-				<td class="product"><strong>` + gameList[i].title + `</strong><br>` + gameList[i].short_description + `</td>
-				<td class="rate text-right"><span><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></span></td>
-				<td class="price text-right">` + gameList[i].genre + `</td>
-			</tr>
-			`
-	};
-
-	//changes pagination styles
-	if(page == 1){
-		prevBtn.className = 'disabled';
-	} else {
-		prevBtn.className = 'active';
-	}
-
-	if(page == numPages()){
-		nextBtn.className = 'disabled';
-	} else {
-		nextBtn.className = 'active';
-	}
-}
-
-//creates filter list 
-function createFilterList(){	
-	let distinct = [];	
-	let unique = [];
-
-	for(i in gameList){			
-		if( !unique[gameList[i].genre]){
-			distinct.push(gameList[i].genre);
-			unique[gameList[i].genre] = 1;						
-			filters.innerHTML += `
-				<div class="checkbox">
-            		<label><input type="checkbox" class="icheck" value="` + gameList[i].genre + `"> ` + gameList[i].genre + `</label>
-            	</div>`	
-		}
-	};
-}
-
-
-
 function onLoad(){
 	let page = 1;
 	
@@ -163,8 +143,49 @@ function onLoad(){
 	});			
 }
 
+function applyFilter(){	
+	let page = 1;
+
+	//resets sort when new filter is applied
+	if(isSort){
+		isSort = false;
+		selectedSort.innerHTML = "Order By";
+	}
+		
+	if(checkTags().length != 0) {
+		isFilter = true;
+		for(i = 0; i < checkTags().length; i++){		
+			if(i < 1){				
+				filterQuery = "filter?tag=" + checkTags()[i];								
+			} else {
+				filterQuery += "." + checkTags()[i];
+			}						
+		}	
+	} else {
+		isFilter = false;
+		filterQuery = "games"
+	}
+		
+	fetchData(url + filterQuery)	
+		.then(data => {
+			gameList = data;	
+			createGameList(page);			
+	});			
+}	
+
 function sort(sort){
-	let page = 1;	
+	let page = 1;		
+
+	if(isFilter && !isSort){
+		filterQuery += "&sort-by="		
+		console.log(filterQuery)
+	} else if(isFilter && isSort){
+		//do nothing
+	} else {
+		filterQuery = "games?sort-by="
+	}
+	
+	isSort = true;
 
 	switch(sort){
 		case "alphabetical":
@@ -180,7 +201,7 @@ function sort(sort){
 			selectedSort.innerHTML = "Order By";
 	}	
 
-	fetchData(url + "games?sort-by=" + sort + "")	
+	fetchData(url + filterQuery + sort)	
 		.then(data => {
 			gameList = data;			
 			createGameList(page);			
