@@ -69,7 +69,7 @@ function createGameList(page){
 		let num = i+1;	
 
 		tbody.innerHTML += `			
-			<tr id="myBtn">
+			<tr id=` + gameList[i].id +`>
 				<td class="number text-center">` + num + `</td>
 				<td class="image"><img src="` + gameList[i].thumbnail + `" alt=""></td>
 				<td class="product"><strong>` + gameList[i].title + `</strong><br>` + gameList[i].short_description + `</td>
