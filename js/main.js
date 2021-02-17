@@ -5,6 +5,7 @@ const nextBtn = document.getElementById('next_page');
 const prevBtn = document.getElementById('prev_page');
 const results = document.getElementById('num-results');
 const selectedSort = document.getElementById('selected-sort');
+const gameDetails = document.getElementById('game-details');
 
 const url = "https://free-to-play-games-database.p.rapidapi.com/api/";
 const headers = { 
@@ -76,7 +77,7 @@ function createGameList(page){
 				<td class="rate text-right"><span><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></span></td>
 				<td class="price text-right">` + gameList[i].genre + `</td>				
 			</tr>
-			`
+			`;
 	};
 
 	//changes pagination styles
@@ -92,6 +93,32 @@ function createGameList(page){
 		nextBtn.className = 'active';
 	}
 }
+
+function createGameDetails(game){
+	gameDetails.innerHTML = "";
+
+	gameDetails.innerHTML = 
+	`<h1 class="my-4">${gameList.title} <small>MMORPG</small></h1>
+	<div class="row">
+	  <div class="col-sm-5">
+		<img src="${gameList.thumbnail}" alt="">
+	  </div>
+	  <div class="col-sm-6">
+		<h3 class="my-3">Game Description</h3>
+		<p>${gameList.description}</p>
+		<h3 class="my-3">Game Details</h3>
+		<ul>
+		  <li><label>Release Date:</label><span> ${gameList.release_date}</span></li>
+		  <li><label>Genre:</label><span> ${gameList.genre}</span></li>
+		  <li><label>Platform:</label><span> ${gameList.platform}</span></li>      
+		  <li><label>Publisher:</label><span> ${gameList.publisher}</span></li>
+		  <li><label>Developer:</label><span> ${gameList.developer}</span></li>
+		  <li><a href="${gameList.game_url}"></a>${gameList.game_url}</li>
+		  
+		</ul>
+	  </div>
+	</div>`;
+};
 
 //creates filter list 
 /*
@@ -206,6 +233,32 @@ function sort(sort){
 			gameList = data;			
 			createGameList(page);			
 	});			
+}
+
+var modal = document.getElementById("myModal");
+var closeBtn = document.getElementsByClassName("close")[0];
+
+document.getElementById('table-body').addEventListener('click', function(e){
+    let selectedGame = e.target.closest('tr').id;	
+
+	fetchData(url + "game?id=" + selectedGame)	
+		.then(data => {
+			gameList = data;							
+			createGameDetails(selectedGame);
+	});	
+    modal.style.display = "block";
+})
+
+closeBtn.onclick = function() {
+  modal.style.display = "none";
+  gameDetails.innerHTML = "";
+}
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+	gameDetails.innerHTML = "";
+  }
 }
 
 document.getElementById('apply-btn').addEventListener('click', applyFilter);
