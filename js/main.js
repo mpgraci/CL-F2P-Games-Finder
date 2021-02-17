@@ -9,7 +9,7 @@ const gameDetails = document.getElementById('game-details');
 
 const url = "https://free-to-play-games-database.p.rapidapi.com/api/";
 const headers = { 
-	"method": "GET",
+	"method": "GET",	
 	"headers": {
 		"x-rapidapi-key": "wcChjWF6uPmshVrZelENA2X6bwmIp1EeuhfjsnpYsvCrl1zAtx",
 		"x-rapidapi-host": "free-to-play-games-database.p.rapidapi.com"
@@ -113,7 +113,7 @@ function createGameDetails(game){
 		  <li><label>Platform:</label><span> ${gameList.platform}</span></li>      
 		  <li><label>Publisher:</label><span> ${gameList.publisher}</span></li>
 		  <li><label>Developer:</label><span> ${gameList.developer}</span></li>
-		  <li><a href="${gameList.game_url}"></a>${gameList.game_url}</li>
+		  <li><a href="${gameList.game_url}">${gameList.game_url}</a></li>
 		  
 		</ul>
 	  </div>
