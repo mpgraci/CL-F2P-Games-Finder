@@ -1,43 +1,25 @@
 import Tags from './Tags.js';
-let tags = new Tags();
+import GetData from './GetData.js';
+import Pages from './Pages.js';
 
-const tbody = document.getElementById('table-body');
-const nextBtn = document.getElementById('next_page');
-const prevBtn = document.getElementById('prev_page');
-const results = document.getElementById('num-results');
+let tags = new Tags();
+let getData = new GetData();
+
 const selectedSort = document.getElementById('selected-sort');
 const gameDetails = document.getElementById('game-details');
 const modal = document.getElementById("myModal");
 
-const url = "https://free-to-play-games-database.p.rapidapi.com/api/";
-const headers = { 
-	"method": "GET",	
-	"headers": {
-		"x-rapidapi-key": "wcChjWF6uPmshVrZelENA2X6bwmIp1EeuhfjsnpYsvCrl1zAtx",
-		"x-rapidapi-host": "free-to-play-games-database.p.rapidapi.com"
-	}}
-
-let gameList = {};
-
-let currentPage = 1;
-let itemsPerPage = 20;
-
 let filterQuery = "games";
 let isSort = false;
 let isFilter = false;
-
-//fetch
-function fetchData(url) {
-	return fetch(url, headers)
-			.then(response => response.json())
-			.catch(err => console.error(err));	
-}
+let currentPage = 1;
+let gameList = {};
 
 //populates list on page load
 function onLoad(){
-	let page = 1;
+	let page = 1;	
 
-	fetchData(url + "games")	
+	getData.fetchData(filterQuery)	
 		.then(data => {
 			gameList = data;				
 			tags.createTagList();
@@ -47,11 +29,19 @@ function onLoad(){
 
 //generates game list
 function createGameList(page){
+	const tbody = document.getElementById('table-body');
+	const nextBtn = document.getElementById('next_page');
+	const prevBtn = document.getElementById('prev_page');
+	const results = document.getElementById('num-results');
+
+	let pages = new Pages(gameList.length, page);
+	currentPage = page;
+
 	tbody.innerHTML = "";
 	
 	results.innerHTML = gameList.length + " free game(s)"
 	
-	for(let i = (page-1) * itemsPerPage; i < (page * itemsPerPage) && i < gameList.length; i++){
+	for(let i = (page-1) * pages.itemsPerPage; i < (page * pages.itemsPerPage) && i < gameList.length; i++){
 		let num = i+1;	
 
 		tbody.innerHTML += `			
@@ -72,28 +62,11 @@ function createGameList(page){
 		prevBtn.className = 'active';
 	}
 
-	if(page == numPages()){
+	if(page == pages.numPages()){
 		nextBtn.className = 'disabled';
 	} else {
 		nextBtn.className = 'active';
 	}
-}
-
-//pagination
-function prevPage(){
-	if(currentPage > 1){
-		currentPage--;
-		createGameList(currentPage);
-	}
-}
-function nextPage(){	
-	if(currentPage < numPages()){
-		currentPage++;
-		createGameList(currentPage);
-	}
-}
-function numPages(){
-	return Math.ceil(gameList.length / itemsPerPage);
 }
 
 //filter and sort
@@ -120,7 +93,7 @@ function applyFilter(){
 		filterQuery = "games"
 	}
 		
-	fetchData(url + filterQuery)	
+	getData.fetchData(filterQuery)	
 		.then(data => {
 			gameList = data;	
 			createGameList(page);			
@@ -130,8 +103,7 @@ function sort(sort){
 	let page = 1;		
 
 	if(isFilter && !isSort){
-		filterQuery += "&sort-by="		
-		console.log(filterQuery)
+		filterQuery += "&sort-by="				
 	} else if(isFilter && isSort){
 		//do nothing
 	} else {
@@ -154,7 +126,7 @@ function sort(sort){
 			selectedSort.innerHTML = "Order By";
 	}	
 
-	fetchData(url + filterQuery + sort)	
+	getData.fetchData(filterQuery + sort)	
 		.then(data => {
 			gameList = data;			
 			createGameList(page);			
@@ -192,7 +164,7 @@ function createGameDetails(game){
 document.getElementById('table-body').addEventListener('click', function(e){
     let selectedGame = e.target.closest('tr').id;	
 
-	fetchData(url + "game?id=" + selectedGame)	
+	getData.fetchData("game?id=" + selectedGame)	
 		.then(data => {
 			gameList = data;							
 			createGameDetails(selectedGame);
@@ -215,8 +187,14 @@ window.onclick = function(event) {
 //buttons and events
 window.onload = onLoad();
 document.getElementById('apply-btn').addEventListener('click', applyFilter);
-document.getElementById('next_page').addEventListener('click', nextPage);
-document.getElementById('prev_page').addEventListener('click', prevPage);
+document.getElementById('next_page').addEventListener('click', function(){		
+	let pages = new Pages(gameList.length, currentPage);	
+	createGameList(pages.nextPage());
+});
+document.getElementById('prev_page').addEventListener('click', function(){		
+	let pages = new Pages(gameList.length, currentPage);	
+	createGameList(pages.prevPage());
+});
 document.getElementById('name-sort').addEventListener('click', function(){sort("alphabetical")});
 document.getElementById('date-sort').addEventListener('click', function(){sort("release-date")});
 document.getElementById('pop-sort').addEventListener('click', function(){sort("popularity")});
