@@ -14,6 +14,7 @@ let isSort = false;
 let isFilter = false;
 let currentPage = 1;
 let gameList = {};
+let gameDetailsData = {};
 
 //populates list on page load
 function onLoad(){
@@ -138,22 +139,22 @@ function createGameDetails(game){
 	gameDetails.innerHTML = "";
 
 	gameDetails.innerHTML = 
-	`<h1 class="my-4">${gameList.title} <small>${gameList.genre}</small></h1>
+	`<h1 class="my-4">${gameDetailsData.title} <small>${gameDetailsData.genre}</small></h1>
 	<div class="row">
 	  <div class="col-sm-5">
-		<img src="${gameList.thumbnail}" alt="">
+		<img src="${gameDetailsData.thumbnail}" alt="">
 	  </div>
 	  <div class="col-sm-6">
 		<h3 class="my-3">Game Description</h3>
-		<p>${gameList.description}</p>
+		<p>${gameDetailsData.description}</p>
 		<h3 class="my-3">Game Details</h3>
 		<ul>
-		  <li><label>Release Date:</label><span> ${gameList.release_date}</span></li>
-		  <li><label>Genre:</label><span> ${gameList.genre}</span></li>
-		  <li><label>Platform:</label><span> ${gameList.platform}</span></li>      
-		  <li><label>Publisher:</label><span> ${gameList.publisher}</span></li>
-		  <li><label>Developer:</label><span> ${gameList.developer}</span></li>
-		  <li><a href="${gameList.game_url}">${gameList.game_url}</a></li>
+		  <li><label>Release Date:</label><span> ${gameDetailsData.release_date}</span></li>
+		  <li><label>Genre:</label><span> ${gameDetailsData.genre}</span></li>
+		  <li><label>Platform:</label><span> ${gameDetailsData.platform}</span></li>      
+		  <li><label>Publisher:</label><span> ${gameDetailsData.publisher}</span></li>
+		  <li><label>Developer:</label><span> ${gameDetailsData.developer}</span></li>
+		  <li><a href="${gameDetailsData.game_url}">${gameDetailsData.game_url}</a></li>
 		  
 		</ul>
 	  </div>
@@ -166,7 +167,7 @@ document.getElementById('table-body').addEventListener('click', function(e){
 
 	getData.fetchData("game?id=" + selectedGame)	
 		.then(data => {
-			gameList = data;							
+			gameDetailsData = data;							
 			createGameDetails(selectedGame);
 	});	
     modal.style.display = "block";
