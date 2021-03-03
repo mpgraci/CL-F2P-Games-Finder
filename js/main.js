@@ -1,11 +1,13 @@
+import Tags from './Tags.js';
+let tags = new Tags();
+
 const tbody = document.getElementById('table-body');
-const filters = document.getElementById('filter-list');
-const pagination = document.getElementsByClassName('pagination');
 const nextBtn = document.getElementById('next_page');
 const prevBtn = document.getElementById('prev_page');
 const results = document.getElementById('num-results');
 const selectedSort = document.getElementById('selected-sort');
 const gameDetails = document.getElementById('game-details');
+const modal = document.getElementById("myModal");
 
 const url = "https://free-to-play-games-database.p.rapidapi.com/api/";
 const headers = { 
@@ -16,42 +18,13 @@ const headers = {
 	}}
 
 let gameList = {};
+
 let currentPage = 1;
 let itemsPerPage = 20;
-let filterQuery = "games";
 
+let filterQuery = "games";
 let isSort = false;
 let isFilter = false;
-
-let tagList = ["mmorpg", "shooter", "strategy", "moba", "racing", "sports", "social", "sandbox", "open-world",
- "survival", "pvp", "pve", "pixel", "voxel", "zombie", "turn-based", "first-person", "third-Person", "top-down", "tank", "space", 
-"sailing", "side-scroller", "superhero", "permadeath", "card", "battle-royale", "mmo", "mmofps", "mmotps", "3d", "2d", "anime", "fantasy", "sci-fi", "fighting",
- "action-rpg", "action", "military", "martial-arts", "flight", "low-spec", "tower-defense", "horror", "mmorts"];
-
-//creates tag list 
-function createTagList(){	
-	let distinct = [];	
-	let unique = [];
-
-	for(i in tagList){			
-		if( !unique[tagList[i]]){
-			distinct.push(tagList[i]);
-			unique[tagList[i]] = 1;						
-			filters.innerHTML += `
-				<div class="checkbox">
-            		<label><input name="tags" type="checkbox" class="icheck" value="` + tagList[i] + `"> ` + tagList[i] + `</label>
-            	</div>`	
-		}
-	};
-}
-
-function checkTags(){
-	let checkboxes = document.querySelectorAll('input[name="tags"]:checked'), values = [];
-	Array.prototype.forEach.call(checkboxes, function(el){
-		values.push(el.value);
-	});
-	return values;
-}
 
 //fetch
 function fetchData(url) {
@@ -60,13 +33,25 @@ function fetchData(url) {
 			.catch(err => console.error(err));	
 }
 
+//populates list on page load
+function onLoad(){
+	let page = 1;
+
+	fetchData(url + "games")	
+		.then(data => {
+			gameList = data;				
+			tags.createTagList();
+			createGameList(page);			
+	});			
+}
+
 //generates game list
 function createGameList(page){
 	tbody.innerHTML = "";
 	
 	results.innerHTML = gameList.length + " free game(s)"
 	
-	for(i = (page-1) * itemsPerPage; i < (page * itemsPerPage) && i < gameList.length; i++){
+	for(let i = (page-1) * itemsPerPage; i < (page * itemsPerPage) && i < gameList.length; i++){
 		let num = i+1;	
 
 		tbody.innerHTML += `			
@@ -94,51 +79,6 @@ function createGameList(page){
 	}
 }
 
-function createGameDetails(game){
-	gameDetails.innerHTML = "";
-
-	gameDetails.innerHTML = 
-	`<h1 class="my-4">${gameList.title} <small>MMORPG</small></h1>
-	<div class="row">
-	  <div class="col-sm-5">
-		<img src="${gameList.thumbnail}" alt="">
-	  </div>
-	  <div class="col-sm-6">
-		<h3 class="my-3">Game Description</h3>
-		<p>${gameList.description}</p>
-		<h3 class="my-3">Game Details</h3>
-		<ul>
-		  <li><label>Release Date:</label><span> ${gameList.release_date}</span></li>
-		  <li><label>Genre:</label><span> ${gameList.genre}</span></li>
-		  <li><label>Platform:</label><span> ${gameList.platform}</span></li>      
-		  <li><label>Publisher:</label><span> ${gameList.publisher}</span></li>
-		  <li><label>Developer:</label><span> ${gameList.developer}</span></li>
-		  <li><a href="${gameList.game_url}">${gameList.game_url}</a></li>
-		  
-		</ul>
-	  </div>
-	</div>`;
-};
-
-//creates filter list 
-/*
-function createFilterList(){	
-	let distinct = [];	
-	let unique = [];
-
-	for(i in gameList){			
-		if( !unique[gameList[i].genre]){
-			distinct.push(gameList[i].genre);
-			unique[gameList[i].genre] = 1;						
-			filters.innerHTML += `
-				<div class="checkbox">
-            		<label><input type="checkbox" class="icheck" value="` + gameList[i].genre + `"> ` + gameList[i].genre + `</label>
-            	</div>`	
-		}
-	};
-}
-*/
-
 //pagination
 function prevPage(){
 	if(currentPage > 1){
@@ -146,30 +86,17 @@ function prevPage(){
 		createGameList(currentPage);
 	}
 }
-
 function nextPage(){	
 	if(currentPage < numPages()){
 		currentPage++;
 		createGameList(currentPage);
 	}
 }
-
 function numPages(){
 	return Math.ceil(gameList.length / itemsPerPage);
 }
 
-function onLoad(){
-	let page = 1;
-	
-	fetchData(url + "games")	
-		.then(data => {
-			gameList = data;	
-			//createFilterList();		
-			createTagList();
-			createGameList(page);			
-	});			
-}
-
+//filter and sort
 function applyFilter(){	
 	let page = 1;
 
@@ -179,13 +106,13 @@ function applyFilter(){
 		selectedSort.innerHTML = "Order By";
 	}
 		
-	if(checkTags().length != 0) {
+	if(tags.checkTags().length != 0) {
 		isFilter = true;
-		for(i = 0; i < checkTags().length; i++){		
+		for(let i = 0; i < tags.checkTags().length; i++){		
 			if(i < 1){				
-				filterQuery = "filter?tag=" + checkTags()[i];								
+				filterQuery = "filter?tag=" + tags.checkTags()[i];								
 			} else {
-				filterQuery += "." + checkTags()[i];
+				filterQuery += "." + tags.checkTags()[i];
 			}						
 		}	
 	} else {
@@ -199,7 +126,6 @@ function applyFilter(){
 			createGameList(page);			
 	});			
 }	
-
 function sort(sort){
 	let page = 1;		
 
@@ -235,9 +161,34 @@ function sort(sort){
 	});			
 }
 
-var modal = document.getElementById("myModal");
-var closeBtn = document.getElementsByClassName("close")[0];
+//generates game details for popup
+function createGameDetails(game){
+	gameDetails.innerHTML = "";
 
+	gameDetails.innerHTML = 
+	`<h1 class="my-4">${gameList.title} <small>${gameList.genre}</small></h1>
+	<div class="row">
+	  <div class="col-sm-5">
+		<img src="${gameList.thumbnail}" alt="">
+	  </div>
+	  <div class="col-sm-6">
+		<h3 class="my-3">Game Description</h3>
+		<p>${gameList.description}</p>
+		<h3 class="my-3">Game Details</h3>
+		<ul>
+		  <li><label>Release Date:</label><span> ${gameList.release_date}</span></li>
+		  <li><label>Genre:</label><span> ${gameList.genre}</span></li>
+		  <li><label>Platform:</label><span> ${gameList.platform}</span></li>      
+		  <li><label>Publisher:</label><span> ${gameList.publisher}</span></li>
+		  <li><label>Developer:</label><span> ${gameList.developer}</span></li>
+		  <li><a href="${gameList.game_url}">${gameList.game_url}</a></li>
+		  
+		</ul>
+	  </div>
+	</div>`;
+};
+
+//popup
 document.getElementById('table-body').addEventListener('click', function(e){
     let selectedGame = e.target.closest('tr').id;	
 
@@ -249,10 +200,10 @@ document.getElementById('table-body').addEventListener('click', function(e){
     modal.style.display = "block";
 })
 
-closeBtn.onclick = function() {
+document.getElementsByClassName("close")[0].addEventListener('click', function() {
   modal.style.display = "none";
   gameDetails.innerHTML = "";
-}
+});
 
 window.onclick = function(event) {
   if (event.target == modal) {
@@ -261,6 +212,8 @@ window.onclick = function(event) {
   }
 }
 
+//buttons and events
+window.onload = onLoad();
 document.getElementById('apply-btn').addEventListener('click', applyFilter);
 document.getElementById('next_page').addEventListener('click', nextPage);
 document.getElementById('prev_page').addEventListener('click', prevPage);
