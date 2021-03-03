@@ -4,6 +4,7 @@ export default class GetData {
         this.headers = { 
             "method": "GET",	
             "headers": {
+                "Access-Control-Allow-Origin": "*",
                 "x-rapidapi-key": "wcChjWF6uPmshVrZelENA2X6bwmIp1EeuhfjsnpYsvCrl1zAtx",
                 "x-rapidapi-host": "free-to-play-games-database.p.rapidapi.com"
             }}

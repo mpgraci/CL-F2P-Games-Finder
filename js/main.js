@@ -2,6 +2,18 @@ import Tags from './Tags.js';
 import GetData from './GetData.js';
 import Pages from './Pages.js';
 
+//ADD CLEAR BUTTON TO TAG FILTERS AND MORE/LESS FUCNTION TO DECREASE SIZE OF LIST
+//ADD CLEAR BUTTON TO TAG FILTERS AND MORE/LESS FUCNTION TO DECREASE SIZE OF LIST
+//ADD CLEAR BUTTON TO TAG FILTERS AND MORE/LESS FUCNTION TO DECREASE SIZE OF LIST
+//ADD CLEAR BUTTON TO TAG FILTERS AND MORE/LESS FUCNTION TO DECREASE SIZE OF LIST
+//ADD CLEAR BUTTON TO TAG FILTERS AND MORE/LESS FUCNTION TO DECREASE SIZE OF LIST
+//ADD CLEAR BUTTON TO TAG FILTERS AND MORE/LESS FUCNTION TO DECREASE SIZE OF LIST
+//ADD CLEAR BUTTON TO TAG FILTERS AND MORE/LESS FUCNTION TO DECREASE SIZE OF LIST
+//ADD CLEAR BUTTON TO TAG FILTERS AND MORE/LESS FUCNTION TO DECREASE SIZE OF LIST
+//ADD CLEAR BUTTON TO TAG FILTERS AND MORE/LESS FUCNTION TO DECREASE SIZE OF LIST
+//ADD CLEAR BUTTON TO TAG FILTERS AND MORE/LESS FUCNTION TO DECREASE SIZE OF LIST
+
+
 let tags = new Tags();
 let getData = new GetData();
 
@@ -135,8 +147,7 @@ function sort(sort){
 }
 
 //generates game details for popup
-function createGameDetails(game){
-	gameDetails.innerHTML = "";
+function createGameDetails(){
 
 	gameDetails.innerHTML = 
 	`<h1 class="my-4">${gameDetailsData.title} <small>${gameDetailsData.genre}</small></h1>
@@ -159,18 +170,20 @@ function createGameDetails(game){
 		</ul>
 	  </div>
 	</div>`;
+
+	modal.style.display = "block";
 };
 
 //popup
 document.getElementById('table-body').addEventListener('click', function(e){
     let selectedGame = e.target.closest('tr').id;	
+	gameDetails.innerHTML = "";
 
 	getData.fetchData("game?id=" + selectedGame)	
 		.then(data => {
 			gameDetailsData = data;							
-			createGameDetails(selectedGame);
-	});	
-    modal.style.display = "block";
+			createGameDetails();
+	});	    
 })
 
 document.getElementsByClassName("close")[0].addEventListener('click', function() {
