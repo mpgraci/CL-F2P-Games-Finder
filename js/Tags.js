@@ -7,7 +7,7 @@ export default class Tags {
     }
     
     createTagList(){	
-        //checks for and won't list duplicates
+        //checks for duplicates
         let distinct = [];	
         let unique = [];
         const filters = document.getElementById('filter-list');
@@ -15,11 +15,13 @@ export default class Tags {
         for(let i in this.tagList){			
             if( !unique[this.tagList[i]]){
                 distinct.push(this.tagList[i]);
-                unique[this.tagList[i]] = 1;						
+                unique[this.tagList[i]] = 1;	                
                 filters.innerHTML += `
-                    <div class="checkbox">
+                    <li>
+                    <div class="checkbox">                        
                         <label><input name="tags" type="checkbox" class="icheck" value="` + this.tagList[i] + `"> ` + this.tagList[i] + `</label>
-                    </div>`	
+                    </div>
+                    </li>`
             }
         };
     }
@@ -30,5 +32,12 @@ export default class Tags {
             values.push(el.value);
         });
         return values;
+    }
+
+    clearTags(){
+        const checkboxes = document.querySelectorAll('input[name="tags"]:checked');               
+        Array.prototype.forEach.call(checkboxes, function(el){
+             el.checked = false;
+        });
     }
 }

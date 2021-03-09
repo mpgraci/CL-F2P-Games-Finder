@@ -2,18 +2,6 @@ import Tags from './Tags.js';
 import GetData from './GetData.js';
 import Pages from './Pages.js';
 
-//ADD CLEAR BUTTON TO TAG FILTERS AND MORE/LESS FUCNTION TO DECREASE SIZE OF LIST
-//ADD CLEAR BUTTON TO TAG FILTERS AND MORE/LESS FUCNTION TO DECREASE SIZE OF LIST
-//ADD CLEAR BUTTON TO TAG FILTERS AND MORE/LESS FUCNTION TO DECREASE SIZE OF LIST
-//ADD CLEAR BUTTON TO TAG FILTERS AND MORE/LESS FUCNTION TO DECREASE SIZE OF LIST
-//ADD CLEAR BUTTON TO TAG FILTERS AND MORE/LESS FUCNTION TO DECREASE SIZE OF LIST
-//ADD CLEAR BUTTON TO TAG FILTERS AND MORE/LESS FUCNTION TO DECREASE SIZE OF LIST
-//ADD CLEAR BUTTON TO TAG FILTERS AND MORE/LESS FUCNTION TO DECREASE SIZE OF LIST
-//ADD CLEAR BUTTON TO TAG FILTERS AND MORE/LESS FUCNTION TO DECREASE SIZE OF LIST
-//ADD CLEAR BUTTON TO TAG FILTERS AND MORE/LESS FUCNTION TO DECREASE SIZE OF LIST
-//ADD CLEAR BUTTON TO TAG FILTERS AND MORE/LESS FUCNTION TO DECREASE SIZE OF LIST
-
-
 let tags = new Tags();
 let getData = new GetData();
 
@@ -112,6 +100,7 @@ function applyFilter(){
 			createGameList(page);			
 	});			
 }	
+
 function sort(sort){
 	let page = 1;		
 
@@ -201,6 +190,7 @@ window.onclick = function(event) {
 //buttons and events
 window.onload = onLoad();
 document.getElementById('apply-btn').addEventListener('click', applyFilter);
+document.getElementById('clear-btn').addEventListener('click', tags.clearTags);
 document.getElementById('next_page').addEventListener('click', function(){		
 	let pages = new Pages(gameList.length, currentPage);	
 	createGameList(pages.nextPage());
