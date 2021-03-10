@@ -40,21 +40,25 @@ function createGameList(page){
 
 	tbody.innerHTML = "";
 	
-	results.innerHTML = gameList.length + " free game(s)"
-	
-	for(let i = (page-1) * pages.itemsPerPage; i < (page * pages.itemsPerPage) && i < gameList.length; i++){
-		let num = i+1;	
+	if(typeof gameList.length == "undefined"){
+		results.innerHTML = "No free game(s) found"
+	} else {
+		results.innerHTML = gameList.length + " free game(s)"
+			
+		for(let i = (page-1) * pages.itemsPerPage; i < (page * pages.itemsPerPage) && i < gameList.length; i++){
+			let num = i+1;	
 
-		tbody.innerHTML += `			
-			<tr id=` + gameList[i].id +`>
-				<td class="number text-center">` + num + `</td>
-				<td class="image"><img src="` + gameList[i].thumbnail + `" alt=""></td>
-				<td class="product"><strong>` + gameList[i].title + `</strong><br>` + gameList[i].short_description + `</td>
-				<td class="rate text-right"><span><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></span></td>
-				<td class="price text-right">` + gameList[i].genre + `</td>				
-			</tr>
-			`;
-	};
+			tbody.innerHTML += `			
+				<tr id=` + gameList[i].id +`>
+					<td class="number text-center">` + num + `</td>
+					<td class="image"><img src="` + gameList[i].thumbnail + `" alt=""></td>
+					<td class="product"><strong>` + gameList[i].title + `</strong><br>` + gameList[i].short_description + `</td>
+					<td class="rate text-right"><span><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></span></td>
+					<td class="price text-right">` + gameList[i].genre + `</td>				
+				</tr>
+				`;
+		};
+	}
 
 	//changes pagination styles
 	if(page == 1){

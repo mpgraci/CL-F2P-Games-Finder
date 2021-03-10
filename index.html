@@ -40,8 +40,8 @@
               
               <div class="input-group">
                 <!--<input id="search-input" type="text" class="form-control" value="">-->
-                <div class="input-group-btn">
-                  <button class="btn btn-primary" type="button" id="apply-btn"><i class="fa fa-search">Apply</i></button>
+                <div id="tag-button-group">
+                  <button class="btn btn-primary" type="button" id="apply-btn"><i class="fa fa-search">Apply</i></button>                
                   <button class="btn btn-primary" type="button" id="clear-btn"><i class="fa fa-search">Clear</i></button>
                 </div>
               </div>
@@ -68,12 +68,7 @@
                     </ul>
                   </div>
                 </div>
-                <!-- END ORDER RESULT -->
-                
-                <div class="col-md-6 text-right">
-                  <div class="btn-group">                    
-                  </div>
-                </div>
+                <!-- END ORDER RESULT -->                
               </div>
               
               <!-- BEGIN GAMELIST RESULT -->
@@ -85,9 +80,9 @@
               <!-- END GAMELIST RESULT -->
               
               <!-- BEGIN PAGINATION -->
-              <ul class="pagination">                
-                <li id="prev_page"><a href="#">«</a></li>             
-                <li id="next_page"><a href="#">»</a></li>
+              <ul id = "pages" class="pagination">                
+                <li id="prev_page"><a href="#">« Prev</a></li>             
+                <li id="next_page"><a href="#">Next »</a></li>
               </ul>
               <!-- END PAGINATION -->
             </div>

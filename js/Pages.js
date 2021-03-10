@@ -2,7 +2,7 @@ export default class Pages {
     constructor(listLength, currentPage){               
         this.listLength = listLength;  
         this.currentPage = currentPage;      
-        this.itemsPerPage = 20;      
+        this.itemsPerPage = 12;      
     }        
     numPages(){                  
         return Math.ceil(this.listLength / this.itemsPerPage);

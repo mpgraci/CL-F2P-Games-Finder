@@ -12,6 +12,9 @@ export default class GetData {
     fetchData(param) {
         return fetch(this.url + param, this.headers)
                 .then(response => response.json())
-                .catch(err => console.error(err));	
+                .catch(err => {
+                    console.error(err);
+                    alert("There was a problem, please refresh the page");
+                });	
     }
 }
